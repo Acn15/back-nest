@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nest-app:
+    build: .
+    container_name: back-nest
+    restart: always
+    ports:
+      - 3015:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3015
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=UserPostgres
+      - DATABASE_PASSWORD=123456789
+      - DATABASE_NAME=back_nest
+      - SYNCHRONIZE=true
+
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    restart: always
+    environment:
+      - POSTGRES_USER=UserPostgres
+      - POSTGRES_PASSWORD=123456789
+      - POSTGRES_DB=back_nest
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
